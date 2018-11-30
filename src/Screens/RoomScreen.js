@@ -43,6 +43,7 @@ export default class RoomScreen extends React.Component {
   }
   init () {
     this.state.user.setReady().then((user) => {
+      Session.user(user)
       this.setState({ user })
       this.roomWatcher = this.state.room.watch(this.onUpdateRoom)
     }).catch(err => {
@@ -51,12 +52,14 @@ export default class RoomScreen extends React.Component {
   }
   cancel () {
     this.state.user.setReady(false).then((user) => {
+      Session.user(user)
       this.setState({ user })
       if (this.roomWatcher) this.roomWatcher()
     })
   }
   joinToTeam (team) {
     this.state.user.joinToTeam(team).then(user => {
+      Session.user(user)
       this.setState({ user })
     }).catch(err => {
       alert('No se puede unir al equipo');
@@ -98,9 +101,9 @@ export default class RoomScreen extends React.Component {
       let playersState = this.state.players.map((player, index) => {
         let icon
         if (player.ready) {
-          icon = <span style={{ color: 'green' }}>checkmark-circle</span>
+          icon = <span style={{ color: 'green' }}><Icon>check_circle</Icon></span>
         } else {
-          icon = <span style={{ color: 'red' }}>close-circle</span>
+          icon = <span style={{ color: 'red' }}><Icon>check_circle</Icon></span>
         }
         return (<div key={`plaer_state_${index}`}>
 
@@ -110,7 +113,7 @@ export default class RoomScreen extends React.Component {
           </p>
 
           <p style={{ margin: 2 }}>
-            <span>icon: people</span>
+            <span><Icon>people</Icon></span>
             {player.team}
           </p>
         </div>)
@@ -131,7 +134,7 @@ export default class RoomScreen extends React.Component {
             color="secondary"
             onClick={this.cancel}
           >
-            icon: close-circle
+            <Icon>highlight_off</Icon>
           </Button>
         </div>
       )
@@ -176,7 +179,7 @@ export default class RoomScreen extends React.Component {
             color="primary"
             onClick={this.init}
           >
-            icon: checkmark-circle"
+            <Icon>done</Icon>
           </Button>
 
         </div>
@@ -184,6 +187,7 @@ export default class RoomScreen extends React.Component {
     )
   }
   onUpdateRoom = (room) => {
+    Session.room(room)
     this.setState({ room })
     if (room.ready) {
       this.onRoomReady()

@@ -34,7 +34,7 @@ export default class HomeScreen extends Component {
     const { user } = this.state
 
     user.room = room.id
-
+    Session.user(user)
     db.collection('players').doc(user.id)
       .set(user.getAttributes())
       .then(() => {
